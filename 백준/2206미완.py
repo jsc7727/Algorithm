@@ -42,5 +42,6 @@ while q:
                     arr2[xxx][yyy] = arr2[x][y]+1
                     q.append((xxx, yyy, count+1))
 print(arr2[N-1][M-1])
+
 # for i in range(len(arr2)):
 #     print(arr2[i])
