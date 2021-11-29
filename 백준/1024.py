@@ -2,11 +2,16 @@
 # n, l = list(map(int, input().split()))
 n, l = [18, 2]
 
-if n % l == 0:  # 홀수
-    print(1)
-else:  # 짝수
-    print(2)
+result = [-1]
+s = sum(range(5))
+for i in range(l, 101):
+    temp = n-s
+    if temp < 0:
+        break
 
+    if temp % i == 0:
+        result = [i, temp, n, s]
+        break
+    s += i
 
-for i in range(2,101):
-    
+print(*result)
