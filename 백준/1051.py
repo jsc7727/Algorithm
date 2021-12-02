@@ -26,4 +26,5 @@ for i in range(min(n, m), 1, -1):
             break
     if flag:
         break
+
 print(size**2)
