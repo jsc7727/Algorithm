@@ -20,6 +20,7 @@ arr = [int(input().strip()) for _ in range(n)]
 countArr = [0]*(d+1)
 count = 0
 m = 0
+print(countArr[arr[0]], countArr, k)
 for i in range(k):
     if countArr[arr[i]] == 0:
         count += 1
