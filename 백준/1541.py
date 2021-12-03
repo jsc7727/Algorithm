@@ -20,4 +20,5 @@ for i in range(len(s)):
 else:
     ts += str(int(word))
     ts += ')'
+
 print(eval(ts))
