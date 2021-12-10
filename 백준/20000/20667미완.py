@@ -53,6 +53,7 @@ for i in arr:
 
 for i in range(len(arr)):
     cpuSum = 0
+
     memorySum = 0
     prioritySum = 0
     for k in range(i, len(arr)):
