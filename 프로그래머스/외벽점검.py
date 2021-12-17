@@ -30,4 +30,5 @@ result = []
 #                 recursive(nw, nd)
 
 
+
 # recursive(weak, dist)
