@@ -18,15 +18,16 @@ const input = (() => {
 
 const [N, M] = input().split(' ').map(v => parseInt(v));
 const arr = [];
-arr.push(new Array(1024 + 1).fill(0))
+arr.push(new Array(M + 2).fill(0))
 for (let i = 1; i <= N; i++) {
     let s = 0;
     const temp = [0]
-    arr.push(input().split(' ')
+    const inputList = input().split(' ');
+    inputList
         .forEach((v, idx) => {
             s += parseInt(v);
             temp.push(s + arr[i - 1][idx + 1]);
-        }));
+        });
     arr.push(temp);
 }
 // console.log(arr);
@@ -34,21 +35,12 @@ const getValue = ({ x1, y1, x2, y2 }) => {
     let northWest = 0;
     let north = 0;
     let west = 0;
-    if (x1 > 0 && y1 > 0) {
-        northWest = arr[x1 - 1][y1 - 1];
-    }
-    if (x1 > 0) {
-        north = arr[x1 - 1][y2];
-    }
-    if (y1 > 0) {
-        west = arr[x2][y1 - 1];
-    }
-    // const northWest = arr[x1 - 1]?.[y1 - 1] ? arr[x1 - 1][y1 - 1] : 0;
-    // const north = arr[x1 - 1]?.[y2] ? arr[x1 - 1][y2] : 0;
-    // const west = arr[x2]?.[y1 - 1] ? arr[x2][y1 - 1] : 0;
+    northWest = arr[x1 - 1][y1 - 1];
+    north = arr[x1 - 1][y2];
+    west = arr[x2][y1 - 1];
     return arr[x2][y2] - (north + west - northWest);
 }
 for (let i = 0; i < M; i++) {
-    const [x1, y1, x2, y2] = input().split(' ').map(v => v - 1);;
+    const [x1, y1, x2, y2] = input().split(' ').map(v => ~~v);
     console.log(getValue({ x1, y1, x2, y2 }));
 }
