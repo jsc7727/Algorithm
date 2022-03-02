@@ -367,39 +367,62 @@
 // console.log(output); // --> 876 (897 - 021)
 
 
-const test3 = (board, commands) => {
-    const N = board.length;
-    const M = board[0].length;
-    const checkList = new Array(N).fill(null).map(_ => new Array(M).fill(false));
-    let result = 0;
-    let x1 = 0, y1 = 0;
-    const dic = {
-        'U': [-1, 0],
-        'D': [1, 0],
-        'L': [0, -1],
-        'R': [0, 1]
-    }
-    for (let command of commands) {
-        const [x2, y2] = dic[command];
-        const x3 = x1 + x2;
-        const y3 = y1 + y2;
-        console.log(command, result, x3, y3)
-        if (0 <= x3 && x3 < N && 0 <= y3 && y3 < M) {
-            if (!checkList[x3][y3] && board[x3][y3] !== 0) {
-                result += board[x3][y3];
-                checkList[x3][y3] = true;
+// const test3 = (board, commands) => {
+//     const N = board.length;
+//     const M = board[0].length;
+//     const checkList = new Array(N).fill(null).map(_ => new Array(M).fill(false));
+//     let result = 0;
+//     let x1 = 0, y1 = 0;
+//     const dic = {
+//         'U': [-1, 0],
+//         'D': [1, 0],
+//         'L': [0, -1],
+//         'R': [0, 1]
+//     }
+//     for (let command of commands) {
+//         const [x2, y2] = dic[command];
+//         const x3 = x1 + x2;
+//         const y3 = y1 + y2;
+//         console.log(command, result, x3, y3)
+//         if (0 <= x3 && x3 < N && 0 <= y3 && y3 < M) {
+//             if (!checkList[x3][y3] && board[x3][y3] !== 0) {
+//                 result += board[x3][y3];
+//                 checkList[x3][y3] = true;
+//             }
+//             x1 = x3;
+//             y1 = y3;
+//         }
+//     }
+//     return result;
+// }
+// const board2 =
+//     [
+//         [111, 0, 1],
+//         [99, 1, 1],
+//         [1, 0, 0]
+//     ]
+// const output2 = test3(board2, 'UUUDD')
+// console.log(output2); // 878
+
+
+const insertionSort = function (arr) {
+    for (let i = 1; i < arr.length; i++) {
+        const temp = arr[i];
+        let j;
+        for (j = i; j >= 0; j--) {
+            if (arr[j - 1] > temp) {
+                arr[j] = arr[j - 1]
             }
-            x1 = x3;
-            y1 = y3;
+            else {
+                break;
+            }
         }
+        arr[j] = temp;
+        console.log(arr)
     }
-    return result;
-}
-const board2 =
-    [
-        [111, 0, 1],
-        [99, 1, 1],
-        [1, 0, 0]
-    ]
-const output2 = test3(board2, 'UUUDD')
-console.log(output2); // 878
+    return arr;
+};
+
+
+let output = insertionSort([5, 4, 3, 2, 1]);
+console.log(output); // --> [1, 3, 21]
