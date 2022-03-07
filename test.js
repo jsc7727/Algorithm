@@ -405,24 +405,151 @@
 // console.log(output2); // 878
 
 
-const insertionSort = function (arr) {
-    for (let i = 1; i < arr.length; i++) {
-        const temp = arr[i];
-        let j;
-        for (j = i; j >= 0; j--) {
-            if (arr[j - 1] > temp) {
-                arr[j] = arr[j - 1]
+// const insertionSort = function (arr) {
+//     for (let i = 1; i < arr.length; i++) {
+//         const temp = arr[i];
+//         let j;
+//         for (j = i; j >= 0; j--) {
+//             if (arr[j - 1] > temp) {
+//                 arr[j] = arr[j - 1]
+//             }
+//             else {
+//                 break;
+//             }
+//         }
+//         arr[j] = temp;
+//         console.log(arr)
+//     }
+//     return arr;
+// };
+
+
+// let output = insertionSort([5, 4, 3, 2, 1]);
+// console.log(output); // --> [1, 3, 21]
+
+class Deque {
+    constructor() {
+        this.front = this.back = undefined;
+    }
+    addFront(value) {
+        if (!this.front) this.front = this.back = { value };
+        else this.front = this.front.next = { value, prev: this.front };
+    }
+    removeFront() {
+        let value = this.peekFront();
+        if (this.front === this.back) this.front = this.back = undefined;
+        else (this.front = this.front.prev).next = undefined;
+        return value;
+    }
+    peekFront() {
+        return this.front && this.front.value;
+    }
+    addBack(value) {
+        if (!this.front) this.front = this.back = { value };
+        else this.back = this.back.prev = { value, next: this.back };
+    }
+    removeBack() {
+        let value = this.peekBack();
+        if (this.front === this.back) this.front = this.back = undefined;
+        else (this.back = this.back.next).back = undefined;
+        return value;
+    }
+    peekBack() {
+        return this.back && this.back.value;
+    }
+}
+
+function solution(grid) {
+    var answer = 0;
+    const rotate = (grid, arrow, t) => {
+        if (arrow === 'u') {
+            const y = t;
+            const firstData = grid[0][y];
+            for (let x = 0; x < 3; x++) {
+                grid[x][y] = grid[x + 1][y];
             }
-            else {
-                break;
+            grid[3][y] = firstData;
+        }
+        if (arrow === 'd') {
+            const y = t;
+            const firstData = grid[3][y];
+            for (let x = 3; x > 0; x--) {
+                grid[x][y] = grid[x - 1][y];
+            }
+            grid[0][y] = firstData;
+        }
+        if (arrow === 'l') {
+            const x = t;
+            let firstData = grid[x][0];
+            for (let y = 1; y < 4; y++) {
+                grid[x][y - 1] = grid[x][y];
+            }
+            grid[x][3] = firstData;
+        }
+        if (arrow === 'r') {
+            const x = t;
+            grid[x] = [grid[x][3], ...grid[x].slice(0, 3)]
+        }
+    }
+
+    const check = (grid, newGrid) => {
+        for (let x = 0; x < 4; x++) {
+            for (let y = 0; y < 4; y++) {
+                if (grid[x][y] !== newGrid[x][y]) return false;
             }
         }
-        arr[j] = temp;
-        console.log(arr)
+        return true;
     }
-    return arr;
-};
 
+    const copyArr = (arr) => {
+        let newArr = [];
+        for (let i = 0; i < arr.length; i++) {
+            let temp = [];
+            for (let j = 0; j < arr[0].length; j++) {
+                temp.push(arr[i][j]);
+            }
+            newArr.push(temp);
+        }
+        return newArr;
+    }
 
-let output = insertionSort([5, 4, 3, 2, 1]);
-console.log(output); // --> [1, 3, 21]
+    const bfs = () => {
+        // const deque = [[grid, 0]];
+        let deque = new Deque();
+        deque.addFront([grid, 0]);
+        while (true) {
+            const [newGrid, count] = deque.removeFront();
+            if (count !== 0 && check([[1, 1, 2, 2], [1, 1, 2, 2], [2, 2, 1, 1], [2, 2, 1, 1]], newGrid)) {
+                answer = count;
+                break;
+            }
+            else {
+                // console.log(count)
+
+                for (let i = 0; i < 4; i++) {
+                    for (let arrow of ['u', 'd', 'l', 'r']) {
+                        const nextNewGrid = copyArr(newGrid);
+                        rotate(nextNewGrid, arrow, i);
+                        // deque.push([nextNewGrid, count + 1]);
+                        deque.addBack([nextNewGrid, count + 1]);
+                    }
+                }
+            }
+        }
+    }
+    bfs();
+    return answer;
+}
+
+const arr = [[1, 1, 1, 1], [2, 1, 2, 2], [2, 2, 2, 1], [1, 1, 2, 2]];
+console.log(solution(arr))
+// const check = (grid, newGrid) => {
+//     for (let x = 0; x < 4; x++) {
+//         for (let y = 0; y < 4; y++) {
+//             if (grid[x][y] !== newGrid[x][y]) return false;
+//         }
+//     }
+//     return true;
+// }
+
+// console.log(check([[1, 1, 1, 2], [1, 1, 1, 2], [2, 2, 2, 1], [1, 2, 2, 2]], [[1, 2, 1, 2], [1, 1, 1, 2], [2, 2, 2, 1], [1, 2, 2, 2]]))
