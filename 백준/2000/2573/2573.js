@@ -32,6 +32,8 @@ const iceBreak = (value, emptyPlace) => {
     else return result;
 }
 
+// 빙산이 1년이 지나고 난 뒤 상태와 1년이 지난뒤 빙산이 다 녹았는지 확인하여 반환한다.
+// [빙산이 1년 지난 상태, 빙산이 1년뒤 다 녹았는지]
 const spendOneYearAfterIsEmpty = (arr) => {
     const temp = new Array(n).fill(null).map(_ => new Array(m).fill(0));
     let flag = false;
@@ -63,6 +65,15 @@ const iceBerg = (arr) => {
             }
         }
     }
+    const dfs = (i, j) => {
+        checkList[i][j] = true;
+        for (let [a, b] of arrows) {
+            const [x, y] = [i + a, j + b];
+            if (isValid(x, y) && arr[x][y] !== 0 && checkList[x][y] === false) {
+                dfs(x, y);
+            }
+        }
+    }
     while (true) {
         listClear(checkList);
         let [res, flag] = spendOneYearAfterIsEmpty(arr);
@@ -73,15 +84,6 @@ const iceBerg = (arr) => {
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < m; j++) {
                 if (arr[i][j] === 0 || checkList[i][j] === true) continue;
-                const dfs = (i, j) => {
-                    checkList[i][j] = true;
-                    for (let [a, b] of arrows) {
-                        const [x, y] = [i + a, j + b];
-                        if (isValid(x, y) && arr[x][y] !== 0 && checkList[x][y] === false) {
-                            dfs(x, y);
-                        }
-                    }
-                }
                 dfs(i, j)
                 count++;
             }
@@ -93,7 +95,6 @@ const iceBerg = (arr) => {
         // for (let i of arr) {
         //     console.log(i.join(' '))
         // }
-
         if (count >= 2) return answer;
     }
 }
