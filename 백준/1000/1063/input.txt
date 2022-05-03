@@ -1,0 +1,6 @@
+A1 B2 1
+R
+RT
+LT
+LB
+RB
