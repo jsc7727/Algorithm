@@ -44,3 +44,6 @@ if str1Len == 1:
     print(str2Len)
 else:
     print(((ans+1) % 900528))
+
+
+
