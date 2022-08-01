@@ -29,4 +29,8 @@ for i in range(len(stuffs)+1):
             )
         else:
             dist[i][j] = dist[i-1][j]
+    for i in dist:
+        print(i)
+    print()
+
 print(dist[-1][-1])
