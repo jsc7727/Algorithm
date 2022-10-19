@@ -31,8 +31,9 @@ const solution = (arr) => {
 
 const dp1 = solution(arr1);
 const dp2 = solution(arr2).reverse();
+console.log(dp1, dp2);
 let answer = 0;
 for (let i = 0; i < n; i++) {
-  answer = Math.max(answer, dp1[i] + dp2[i] - 1);
+  answer = Math.max(answer, dp1[i] + dp2[i]);
 }
 console.log(answer);
