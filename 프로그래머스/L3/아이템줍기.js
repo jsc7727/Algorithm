@@ -1,71 +1,62 @@
 function solution(rectangle, characterX, characterY, itemX, itemY) {
-  const len = 12;
+  const len = 25;
   const arr = new Array(len).fill(null).map((_) => new Array(len).fill(0));
   for (let [x, y, xx, yy] of rectangle) {
-    arr[x][y]++;
-    arr[x][yy + 1]--;
-    arr[xx + 1][y]--;
-    arr[xx + 1][yy + 1]++;
-  }
-  for (let i = 1; i < len; i++) {
-    let sum = 0;
-    for (let j = 1; j < len; j++) {
-      sum += arr[i][j];
-      arr[i][j] = arr[i - 1][j] + sum;
-    }
-  }
-  const bfs = () => {
-    const q = [[characterX, characterY, 1]];
-    const arrows = [
-      [0, 1],
-      [1, 0],
-      [0, -1],
-      [-1, 0],
-    ];
-    const arrows2 = [
-      [0, 1],
-      [1, 0],
-      [0, -1],
-      [-1, 0],
-      [-1, -1],
-      [1, 1],
-      [-1, 1],
-      [1, -1],
-    ];
-    const arrowCheck = (x, y) => {
-      let count = 0;
-      for (let [xx, yy] of arrows) {
-        const [xxx, yyy] = [x + xx, y + yy];
-        if (arr[xxx][yyy] === 0) count++;
-      }
-      return count;
-    };
-    let count = Infinity;
-    while (q.length > 0) {
-      const [x, y, c] = q.shift();
-      arr[x][y] = -1;
-      console.log(x, y, c);
-      if (x === itemX && y === itemY) {
-        count = Math.min(count, c);
-        continue;
-      }
-      for (let i = 0; i < arrows2.length; i++) {
-        const [xx, yy] = arrows2[i];
-        const [xxx, yyy] = [x + xx, y + yy];
-        if (arr[xxx][yyy] > 0) {
-          const count = arrowCheck(xxx, yyy);
-          if (count > 0) {
-            q.push([xxx, yyy, c + count]);
-            break;
+    x *= 2;
+    y *= 2;
+    xx *= 2;
+    yy *= 2;
+    for (let i = x; i <= xx; i++) {
+      for (let j = y; j <= yy; j++) {
+        if (i === x || j === y || i === xx || j === yy) {
+          if (arr[i][j] !== 1) {
+            arr[i][j] += 1;
           }
+        } else {
+          arr[i][j] += 2;
         }
       }
     }
-    return count;
+  }
+  for (let i of arr) console.log(i.join(" "));
+
+  const bfs = () => {
+    const q = [[characterX * 2, characterY * 2, 1]];
+    arr[characterX * 2][characterY * 2] = 3;
+    const arrows = [
+      [1, 0],
+      [0, -1],
+      [0, 1],
+      [-1, 0],
+    ];
+    while (q.length > 0) {
+      const [x, y, c] = q.shift();
+      if (x === itemX * 2 && y === itemY * 2) {
+        return c >> 1;
+      }
+      for (let [xx, yy] of arrows) {
+        const [xxx, yyy] = [x + xx, y + yy];
+        if (arr[xxx][yyy] === 1) {
+          arr[xxx][yyy] = 3;
+          q.push([xxx, yyy, c + 1]);
+        }
+      }
+    }
   };
-  const res = bfs();
-  for (let i of arr) console.log(i.join("    "));
-  return res;
+  return bfs();
 }
 
-console.log(solution([[1, 1, 5, 7]], 1, 1, 4, 7));
+console.log(
+  solution(
+    [
+      [1, 1, 7, 4],
+      [3, 2, 5, 5],
+      [4, 3, 6, 9],
+      [2, 6, 8, 8],
+    ],
+    1,
+    3,
+    7,
+    8
+  )
+);
