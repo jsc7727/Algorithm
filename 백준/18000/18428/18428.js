@@ -3,10 +3,10 @@ const stdin = (
   process.platform === "linux"
     ? fs.readFileSync("/dev/stdin").toString()
     : `4
-    S X X X 
-    O X X X
+    S S S T
     X X X X
-    T X X X`
+    X X X X
+    T T T X`
 ).split("\n");
 
 const input = (() => {
@@ -28,41 +28,51 @@ for (let i = 0; i < n; i++) {
   arr.push(input().split(" "));
 }
 
-let count = 0;
-let flag = false;
-const dfs = (arrowIndex, x, y) => {
-  const [xx, yy] = arrows[arrowIndex];
-  const [xxx, yyy] = [x + xx, y + yy];
-  if (isValid(xxx, yyy)) {
-    if (arr[xxx][yyy] === "S") {
-      if (arr[x][y] === "T") {
-        flag = true;
-        return;
-      }
-      if (arr[x][y] === "X") {
-        arr[x][y] = "O";
-        count++;
-      }
-    } else if (arr[xxx][yyy] === "O") {
-      return;
-    } else {
-      dfs(arrowIndex, xxx, yyy);
-    }
-  }
-};
+const ts = [];
 for (let i = 0; i < n; i++) {
   for (let j = 0; j < n; j++) {
     if (arr[i][j] === "T") {
-      for (let k = 0; k < arrows.length; k++) {
-        dfs(k, i, j);
-      }
+      ts.push([i, j]);
     }
   }
 }
+const bfs = () => {
+  for (let [x, y] of ts) {
+    for (let [xx, yy] of arrows) {
+      let [nx, ny] = [x, y];
+      while (isValid(nx, ny)) {
+        if (arr[nx][ny] === "O") {
+          break;
+        }
+        if (arr[nx][ny] === "S") {
+          return false;
+        }
+        nx += xx;
+        ny += yy;
+      }
+    }
+  }
+  return true;
+};
 
-// for (let i of arr) {
-//   console.log(i.join(" "));
-// }
-// console.log(count, flag);
-
-console.log(flag === false && count <= 3 ? "YES" : "NO");
+let answer = false;
+const recv = (count = 0) => {
+  if (count === 3) {
+    if (bfs()) {
+      answer = true;
+    }
+    return;
+  } else {
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        if (arr[i][j] === "X") {
+          arr[i][j] = "O";
+          recv(count + 1);
+          arr[i][j] = "X";
+        }
+      }
+    }
+  }
+};
+recv();
+console.log(answer ? "YES" : "NO");
